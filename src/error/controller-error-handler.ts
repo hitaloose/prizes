@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { HTTPError } from "./http-error";
 import { ZodError } from "zod";
 
-export const apiErrorHandler = (error: unknown) => {
+export const controllerErrorHandler = (error: unknown) => {
   if (error instanceof ZodError) {
     const { errors } = error;
     return NextResponse.json({ message: "zod error", errors }, { status: 400 });

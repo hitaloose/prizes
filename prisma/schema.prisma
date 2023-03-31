@@ -11,7 +11,22 @@ datasource db {
 }
 
 model User {
-  id              Int     @id @default(autoincrement())
-  username        String  @unique
-  hashed_password String?
+  id              String @id @default(uuid())
+  username        String @unique
+  hashed_password String
+}
+
+model Product {
+  id      String @id @default(uuid())
+  name    String @unique
+  stock   Int
+  user_id String
+}
+
+model Roulette {
+  id                 String   @id @default(uuid())
+  costumer_name      String
+  user_id            String
+  product_prizeed_id String?
+  prize_date         DateTime?
 }

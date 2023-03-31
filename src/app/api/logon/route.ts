@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 import { logonBodySchemaValidator } from "@/validators/logon-body-schema-validator";
 import { HTTPError } from "@/error/http-error";
-import { apiErrorHandler } from "@/error/api-error-handler";
+import { controllerErrorHandler } from "@/error/controller-error-handler";
 import { constants } from "../constants";
 
 const prisma = new PrismaClient();
@@ -37,6 +37,6 @@ export async function POST(request: Request) {
       user: { id: createdUser.id, username: createdUser.username },
     });
   } catch (error) {
-    return apiErrorHandler(error);
+    return controllerErrorHandler(error);
   }
 }

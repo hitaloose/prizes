@@ -4,7 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 import { HTTPError } from "@/error/http-error";
-import { apiErrorHandler } from "@/error/api-error-handler";
+import { controllerErrorHandler } from "@/error/controller-error-handler";
 import { loginBodySchemaValidator } from "@/validators/login-body-schema-validation";
 import { constants } from "../constants";
 
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     const valid_password = await bcrypt.compare(
       body.password,
-      user.hashed_password!
+      user.hashed_password
     );
 
     if (!valid_password) {
@@ -38,6 +38,6 @@ export async function POST(request: Request) {
       user: { id: user.id, username: user.username },
     });
   } catch (error) {
-    return apiErrorHandler(error);
+    return controllerErrorHandler(error);
   }
 }
