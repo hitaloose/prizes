@@ -15,14 +15,17 @@ export async function GET(request: Request) {
       throw new HTTPError("id query params is not provided");
     }
 
-    const roulette = await prisma.roulette.findUnique({ where: { id } });
+    const roulette = await prisma.roulette.findUnique({
+      where: { id },
+      include: { product: true },
+    });
 
     if (!roulette) {
       throw new HTTPError("roulette not found");
     }
 
     const products = await prisma.product.findMany({
-      where: { user_id: roulette.user_id },
+      where: { user_id: roulette.user_id, stock: { gt: 0 } },
     });
 
     return NextResponse.json({ roulette, products });
@@ -47,12 +50,30 @@ export async function POST(request: Request) {
 
     const body = prizeBodySchemaValidator.parse(await request.json());
 
+    const product = await prisma.product.findFirst({
+      where: {
+        id: body.product_prizeed_id,
+        user_id: roulette.user_id,
+        stock: { gt: 0 },
+      },
+    });
+
+    if (!product) {
+      throw new HTTPError("product not found");
+    }
+
     const updatedRoulette = await prisma.roulette.update({
       where: { id },
+      include: { product: true },
       data: {
         product_prizeed_id: body.product_prizeed_id,
         prize_date: new Date(),
       },
+    });
+
+    await prisma.product.update({
+      data: { stock: product.stock - 1 },
+      where: { id: body.product_prizeed_id },
     });
 
     return NextResponse.json({ roulette: updatedRoulette });

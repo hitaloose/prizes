@@ -6,27 +6,29 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id              String @id @default(uuid())
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
   username        String @unique
   hashed_password String
 }
 
 model Product {
-  id      String @id @default(uuid())
-  name    String @unique
-  stock   Int
-  user_id String
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  name     String     @unique
+  stock    Int
+  user_id  String
+  Roulette Roulette[]
 }
 
 model Roulette {
-  id                 String   @id @default(uuid())
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
   costumer_name      String
   user_id            String
-  product_prizeed_id String?
+  product            Product?  @relation(fields: [product_prizeed_id], references: [id])
+  product_prizeed_id String?   @db.ObjectId
   prize_date         DateTime?
 }

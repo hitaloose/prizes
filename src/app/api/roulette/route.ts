@@ -33,6 +33,7 @@ export async function GET(request: Request) {
     if (id) {
       const roulette = await prisma.roulette.findFirst({
         where: { id, user_id: user.id },
+        include: { product: true },
       });
 
       if (!roulette) {
@@ -44,6 +45,7 @@ export async function GET(request: Request) {
 
     const roulettes = await prisma.roulette.findMany({
       where: { user_id: user.id },
+      include: { product: true },
     });
 
     return NextResponse.json({ roulettes });
