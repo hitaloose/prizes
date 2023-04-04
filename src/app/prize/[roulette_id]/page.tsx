@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import Fireworks from "@fireworks-js/react";
+import ConfettiExplosion from "react-confetti-explosion";
 
 import { Button } from "@/components/button";
 import { api } from "@/services/api";
@@ -127,6 +128,16 @@ export default function Page(props: Props) {
               : "Gira a roleta para ver qual será o seu brinde"}
           </span>
         </div>
+
+        {!!roulette.product && (
+          <ConfettiExplosion
+            style={{ zIndex: 10 }}
+            force={0.8}
+            duration={3000}
+            particleCount={250}
+            width={1600}
+          />
+        )}
 
         {data.length && (
           <Wheel
