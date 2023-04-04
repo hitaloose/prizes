@@ -100,14 +100,6 @@ export async function POST(request: Request) {
 
     const body = productBodySchemaValidator.parse(await request.json());
 
-    const alreadyExists = await prisma.product.findUnique({
-      where: { name: body.name },
-    });
-
-    if (alreadyExists) {
-      throw new HTTPError("product already exists", 422);
-    }
-
     const product = await prisma.product.create({
       data: { name: body.name, stock: body.stock, user_id: user.id },
     });
